@@ -1,0 +1,30 @@
+name: auto
+
+on:
+  schedule:
+    - cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * *"
+  workflow_dispatch:
+
+jobs:
+  download-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install npm packages with random count
+        run: |
+          #!/bin/bash
+          MAX_DOWNLOADS=30
+          RANDOM_COUNT=$(( (RANDOM % MAX_DOWNLOADS) + 1 ))
+          echo "Randomly selected download count: $RANDOM_COUNT"
+          
+          for (( i=1; i<=RANDOM_COUNT; i++ )); do
+            npm install dctc ${{ secrets.PNS }} --no-save
+            echo "Downloaded packages dctc svg-toolbox for the $i time."
+          done
