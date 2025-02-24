@@ -25,6 +25,7 @@ jobs:
           echo "Randomly selected download count: $RANDOM_COUNT"
           
           for (( i=1; i<=RANDOM_COUNT; i++ )); do
+            npm cache clean --force
             npm install ${{ secrets.PNS }} --no-save
             echo "Downloaded packages dctc svg-toolbox for the $i time."
           done
