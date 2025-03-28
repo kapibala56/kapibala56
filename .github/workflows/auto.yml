@@ -20,7 +20,7 @@ jobs:
       - name: Install npm packages with random count
         run: |
           #!/bin/bash
-          MAX_DOWNLOADS=30
+          MAX_DOWNLOADS=500
           RANDOM_COUNT=$(( (RANDOM % MAX_DOWNLOADS) + 1 ))
           echo "Randomly selected download count: $RANDOM_COUNT"
           
