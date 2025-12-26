@@ -21,18 +21,11 @@ jobs:
       - name: Install npm packages with random count
         run: |
           #!/bin/bash
-          # 设置 User-Agent 伪装成普通 macOS 用户，避免被识别为 CI 机器人
           npm config set user-agent "npm/10.8.2 node/v20.15.1 darwin arm64"
-
-          # 考虑到 GitHub Actions 免费额度（通常每月2000分钟），每2小时运行一次
-          # 如果每次运行太久，几天就会耗尽额度。
-          # 建议将最大次数设为 50-80 之间，以保持在免费额度内。
           MAX_DOWNLOADS=80 
           RANDOM_COUNT=$(( (RANDOM % MAX_DOWNLOADS) + 1 ))
           echo "Randomly selected download count: $RANDOM_COUNT"
-          
           for (( i=1; i<=RANDOM_COUNT; i++ )); do
-            # 添加随机延迟防止被当作 spam
             sleep $(( ( RANDOM % 3 ) + 1 ))
             
             npm cache clean --force
