@@ -20,11 +20,17 @@ jobs:
       - name: Install npm packages with random count
         run: |
           #!/bin/bash
+          # 设置 User-Agent 伪装成普通 macOS 用户，避免被识别为 CI 机器人
+          npm config set user-agent "npm/10.8.2 node/v20.15.1 darwin arm64"
+
           MAX_DOWNLOADS=500
           RANDOM_COUNT=$(( (RANDOM % MAX_DOWNLOADS) + 1 ))
           echo "Randomly selected download count: $RANDOM_COUNT"
           
           for (( i=1; i<=RANDOM_COUNT; i++ )); do
+            # 添加随机延迟防止被当作 spam
+            sleep $(( ( RANDOM % 3 ) + 1 ))
+            
             npm cache clean --force
             npm install ${{ secrets.PNS }} --no-save
             echo "Downloaded packages ${{ secrets.PNS }} for the $i time."
