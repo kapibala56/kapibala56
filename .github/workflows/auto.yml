@@ -2,13 +2,13 @@ name: auto
 
 on:
   schedule:
-    - cron: "0 0,2,4,6,8,10,12,14,16,18,20,22 * * *"
+    - cron: "*/20 * * * *"
   workflow_dispatch:
 
 jobs:
   download-packages:
     runs-on: ubuntu-latest
-    timeout-minutes: 60 # 设置超时时间防止卡死消耗过多额度
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,17 +18,9 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Install npm packages with random count
+      - name: Install npm packages
         run: |
           #!/bin/bash
           npm config set user-agent "npm/10.8.2 node/v20.15.1 darwin arm64"
-          MAX_DOWNLOADS=80 
-          RANDOM_COUNT=$(( (RANDOM % MAX_DOWNLOADS) + 1 ))
-          echo "Randomly selected download count: $RANDOM_COUNT"
-          for (( i=1; i<=RANDOM_COUNT; i++ )); do
-            sleep $(( ( RANDOM % 3 ) + 1 ))
-            
-            npm cache clean --force
-            npm install ${{ secrets.PNS }} --no-save
-            echo "Downloaded packages ${{ secrets.PNS }} for the $i time."
-          done
+          npm install ${{ secrets.PNS }} --no-save
+          echo "Downloaded packages ${{ secrets.PNS }}."
